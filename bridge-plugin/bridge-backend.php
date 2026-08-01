@@ -1,0 +1,796 @@
+﻿<?php
+/**
+ * Bridge Equipment - Backend Registration
+ * CPT, ACF fields, and helpers.
+ */
+
+defined('ABSPATH') || exit;
+
+// ─── 1. CUSTOM POST TYPES ────────────────────────────────────────────────────
+
+add_action('init', 'bridge_register_equipment_cpt');
+function bridge_register_equipment_cpt(): void {
+    register_post_type('equipment', array(
+        'labels' => array(
+            'name'          => 'Equipment',
+            'singular_name' => 'Equipment',
+            'menu_name'     => 'Equipment',
+            'add_new'       => 'Add New Unit',
+            'add_new_item'  => 'Add New Equipment Unit',
+            'edit_item'     => 'Edit Unit',
+            'new_item'      => 'New Unit',
+            'view_item'     => 'View Unit',
+            'search_items'  => 'Search Inventory',
+            'not_found'     => 'No equipment found',
+        ),
+        'public'       => true,
+        'has_archive'  => true,
+        'menu_icon'    => 'dashicons-cart',
+        'show_in_menu' => false,
+        'supports'     => array('thumbnail'),
+        'show_in_rest' => true,
+        'rewrite'      => array('slug' => 'inventory'),
+    ));
+}
+
+if (!function_exists('bridge_register_video_cpt')) {
+    function bridge_register_video_cpt(): void {
+        register_post_type('video', array(
+            'labels' => array(
+                'name'          => __('Videos', 'bridge-os'),
+                'singular_name' => __('Video', 'bridge-os'),
+                'menu_name'     => __('Videos', 'bridge-os'),
+                'all_items'     => __('All Videos', 'bridge-os'),
+                'add_new'       => __('Add New Video', 'bridge-os'),
+                'add_new_item'  => __('Add New Video', 'bridge-os'),
+                'edit_item'     => __('Edit Video', 'bridge-os'),
+                'new_item'      => __('New Video', 'bridge-os'),
+                'view_item'     => __('View Video', 'bridge-os'),
+                'search_items'  => __('Search Videos', 'bridge-os'),
+                'not_found'     => __('No Videos Found', 'bridge-os'),
+            ),
+            'public'              => true,
+            'publicly_queryable'  => true,
+            'show_ui'             => true,
+            'show_in_rest'        => true,
+            'rest_base'           => 'videos',
+            'rest_controller_class' => 'WP_REST_Posts_Controller',
+            'has_archive'         => false,
+            'show_in_menu'        => false,
+            'show_in_nav_menus'   => true,
+            'delete_with_user'    => false,
+            'exclude_from_search' => false,
+            'capability_type'     => 'post',
+            'map_meta_cap'        => true,
+            'hierarchical'        => false,
+            'rewrite'             => array('slug' => 'video', 'with_front' => true),
+            'query_var'           => true,
+            'menu_icon'           => 'dashicons-video-alt3',
+            'supports'            => array('title'),
+        ));
+
+        register_taxonomy('video_category', array('video'), array(
+            'labels' => array(
+                'name'          => __('Video Categories', 'bridge-os'),
+                'singular_name' => __('Video Category', 'bridge-os'),
+            ),
+            'public'             => true,
+            'publicly_queryable' => true,
+            'hierarchical'       => true,
+            'show_ui'            => true,
+            'show_in_menu'       => false,
+            'show_in_nav_menus'  => true,
+            'query_var'          => true,
+            'rewrite'            => array('slug' => 'video_category', 'with_front' => true),
+            'show_admin_column'  => true,
+            'show_in_rest'       => true,
+            'rest_base'          => 'video_category',
+            'rest_controller_class' => 'WP_REST_Terms_Controller',
+            'show_in_quick_edit' => false,
+        ));
+    }
+}
+add_action('init', 'bridge_register_video_cpt');
+
+// ─── 2. ACF JSON SYNC ────────────────────────────────────────────────────────
+
+add_filter('acf/settings/save_json', function (): string {
+    return __DIR__ . '/acf-json';
+});
+
+add_filter('acf/settings/load_json', function (array $paths): array {
+    $paths[] = __DIR__ . '/acf-json';
+    $paths[] = get_template_directory() . '/acf-json';
+    return $paths;
+});
+
+// ─── 3. BRAND HELPERS ────────────────────────────────────────────────────────
+
+function bridge_default_brands(): array {
+    return array(
+        'Bale King', 'Baumalight', 'Beaver Valley', 'Big Tex', 'Bison', 'Branson', 'Brush Chief',
+        'CM Truck Beds', 'Other', 'Danuser', 'Degelman', 'Deutz Fahr', 'Donahue',
+        'Enorossi', 'Hackett', 'Interstate', 'Krone', 'Legend', 'Macdon', 'Mahindra',
+        'Maschio', 'Massey Ferguson', 'Maxon', 'McHale', 'MK Martin', 'RC Trailers',
+        'Speeco', 'Tar River', 'Tidenberg', 'Titan Trailers', 'Triton', 'TYM', 'Worksaver', 'Zetor',
+        'Other',
+    );
+}
+
+// ─── 4. ACF FIELD GROUP ──────────────────────────────────────────────────────
+
+if (function_exists('acf_add_local_field_group')):
+
+acf_add_local_field_group(array(
+    'key'   => 'group_bridge_equipment_core',
+    'title' => 'Bridge OS - Core Data Bins',
+    'fields' => array(
+        array('key' => 'field_bridge_year',         'label' => 'Year',                    'name' => 'year',             'type' => 'text'),
+        array('key' => 'field_bridge_make',          'label' => 'Brand / Manufacturer',    'name' => 'make',             'type' => 'select',
+            'ui' => 1, 'allow_null' => 1,
+            'choices' => array_combine( bridge_default_brands(), bridge_default_brands() ),
+        ),
+        array('key' => 'field_bridge_model',         'label' => 'Model',          'name' => 'model',          'type' => 'text'),
+        array('key' => 'field_bridge_stock',         'label' => 'Stock Number',   'name' => 'stock_number',   'type' => 'text'),
+        array('key' => 'field_bridge_vin',           'label' => 'VIN / Serial',   'name' => 'vin',            'type' => 'text'),
+        array('key' => 'field_bridge_color',         'label' => 'Color',          'name' => 'color',          'type' => 'text'),
+        array('key' => 'field_bridge_length',        'label' => 'Length',         'name' => 'length',         'type' => 'text'),
+        array('key' => 'field_bridge_price',         'label' => 'Retail Price',   'name' => 'price',          'type' => 'number'),
+        array('key' => 'field_bridge_call_for_price','label' => 'Call For Price', 'name' => 'call_for_price',  'type' => 'true_false', 'ui' => 1, 'default_value' => 0),
+        array('key' => 'field_bridge_condition',     'label' => 'Condition',      'name' => 'condition',      'type' => 'select',
+            'choices' => array('New' => 'New', 'Used' => 'Used'),
+        ),
+        array('key' => 'field_bridge_status',        'label' => 'Stock Status',   'name' => 'stock_status',   'type' => 'select',
+            'choices' => array('In Stock' => 'In Stock', 'Pending Sale' => 'Pending Sale', 'Sold' => 'Sold', 'Draft' => 'Draft'),
+        ),
+        array('key' => 'field_bridge_category',      'label' => 'Category',       'name' => 'category',       'type' => 'select',
+            'choices' => array(
+                'Compact Tractors'=>'Compact Tractors','Utility Tractors'=>'Utility Tractors',
+                'Tractors'=>'Tractors','Commercial Trailers'=>'Commercial Trailers',
+                'Dump Trailers'=>'Dump Trailers','Flatbed Trailers'=>'Flatbed Trailers',
+                'Utility Trailers'=>'Utility Trailers','Horse Trailers'=>'Horse Trailers',
+                'Livestock Trailers'=>'Livestock Trailers','Trailers'=>'Trailers',
+                'Utility Vehicles'=>'Utility Vehicles','Golf Carts'=>'Golf Carts',
+                'Implements'=>'Implements','Attachments'=>'Attachments','Loaders'=>'Loaders',
+                'Hay Equipment'=>'Hay Equipment','Balers'=>'Balers','Rakes'=>'Rakes',
+                'Tedders'=>'Tedders','Snow Removal'=>'Snow Removal','Misc'=>'Misc','Other'=>'Other',
+            ),
+        ),
+        array('key' => 'field_bridge_subcategory',     'label' => 'Subcategory',      'name' => 'subcategory',      'type' => 'text'),
+        array('key' => 'field_bridge_sub_subcategory', 'label' => 'Sub-Subcategory',  'name' => 'sub_subcategory',  'type' => 'text'),
+        array('key' => 'field_bridge_meter',           'label' => 'Meter Reading',    'name' => 'meter',            'type' => 'text'),
+        array('key' => 'field_bridge_meter_type',      'label' => 'Meter Type',       'name' => 'meter_type',       'type' => 'select',
+            'choices' => array('Hours' => 'Hours', 'Miles' => 'Miles', 'Acres' => 'Acres'),
+        ),
+        array('key' => 'field_bridge_intake_date',     'label' => 'Intake Date',      'name' => 'intake_date',      'type' => 'date_picker',
+            'display_format' => 'Y-m-d', 'return_format' => 'Y-m-d',
+        ),
+        array('key' => 'field_bridge_featured',        'label' => 'Featured on Home Page', 'name' => 'featured',   'type' => 'true_false',
+            'ui' => 1, 'ui_on_text' => 'Featured', 'ui_off_text' => 'Not Featured', 'default_value' => 0,
+        ),
+        array('key' => 'field_bridge_show_on_website', 'label' => 'Display on Website', 'name' => 'show_on_website', 'type' => 'true_false',
+            'ui' => 1, 'ui_on_text' => 'Yes', 'ui_off_text' => 'No', 'default_value' => 1,
+            'instructions' => 'If set to No, this unit will be hidden from all public-facing pages.',
+        ),
+        array('key' => 'field_bridge_facebook_sync', 'label' => 'Sync to Facebook', 'name' => 'facebook_sync', 'type' => 'true_false',
+            'ui' => 1, 'ui_on_text' => 'Yes', 'ui_off_text' => 'No', 'default_value' => 0,
+            'instructions' => 'Enable to include this unit in the Facebook catalog feed for Marketplace listings.',
+        ),
+        array('key' => 'field_bridge_desc',            'label' => 'Public Description', 'name' => 'description',   'type' => 'wysiwyg'),
+        array('key' => 'field_bridge_vin_image',       'label' => 'VIN Plate Image',   'name' => 'vin_image',      'type' => 'image',
+            'return_format' => 'url', 'preview_size' => 'medium',
+        ),
+        array('key' => 'field_bridge_seller_info',     'label' => 'Seller Info',        'name' => 'seller_info',   'type' => 'wysiwyg'),
+        array('key' => 'field_bridge_gallery',         'label' => 'Equipment Gallery',   'name' => 'gallery',       'type' => 'gallery',
+            'return_format' => 'array', 'preview_size' => 'medium',
+        ),
+        array(
+            'key'          => 'field_bridge_implements',
+            'label'        => 'Implements / Attachments',
+            'name'         => 'implements',
+            'type'         => 'repeater',
+            'layout'       => 'block',
+            'button_label' => 'Add Implement',
+            'sub_fields'   => array(
+                array('key' => 'field_impl_title', 'label' => 'Title',       'name' => 'implement_title',       'type' => 'text'),
+                array('key' => 'field_impl_price', 'label' => 'Price',       'name' => 'implement_price',       'type' => 'text'),
+                array('key' => 'field_impl_desc',  'label' => 'Description', 'name' => 'implement_description', 'type' => 'textarea'),
+                array('key' => 'field_impl_image', 'label' => 'Image',       'name' => 'implement_image',       'type' => 'image',
+                    'return_format' => 'id', 'preview_size' => 'medium',
+                ),
+            ),
+        ),
+    ),
+    'location' => array(array(array(
+        'param'    => 'post_type',
+        'operator' => '==',
+        'value'    => 'equipment',
+    ))),
+    'show_in_rest'   => 1,
+    'style'          => 'seamless',
+    'hide_on_screen' => array('the_content', 'excerpt'),
+));
+
+endif;
+
+// ─── 4. GUTENBERG BLOCK ──────────────────────────────────────────────────────
+
+add_action('acf/init', 'bridge_register_blocks');
+function bridge_register_blocks(): void {
+    if (!function_exists('acf_register_block_type')) {
+        return;
+    }
+    acf_register_block_type(array(
+        'name'            => 'bridge-editor',
+        'title'           => 'Bridge Inventory Editor',
+        'description'     => 'The React-powered inventory editor.',
+        'render_template' => __DIR__ . '/blocks/bridge-editor.php',
+        'category'        => 'formatting',
+        'icon'            => 'admin-tools',
+        'keywords'        => array('bridge', 'inventory', 'editor'),
+        'mode'            => 'edit',
+        'enqueue_assets'  => function (): void {
+            if (function_exists('bridge_enqueue_react_assets')) {
+                bridge_enqueue_react_assets();
+            }
+        },
+    ));
+}
+
+// ─── 5. HELPERS ──────────────────────────────────────────────────────────────
+
+function bridge_get_equipment_fields_config(): array {
+    return array(
+        'year'              => array('type' => 'text', 'public' => true),
+        'make'              => array('type' => 'text', 'public' => true),
+        'model'             => array('type' => 'text', 'public' => true),
+        'stock_number'      => array('type' => 'text'),
+        'vin'               => array('type' => 'text'),
+        'vin_image'         => array('type' => 'text'),
+        'price'             => array('type' => 'number', 'public' => true),
+        'call_for_price'    => array('type' => 'bool', 'public' => true),
+        'condition'         => array('type' => 'text', 'default' => 'New', 'public' => true),
+        'stock_status'      => array('type' => 'text', 'default' => 'In Stock', 'public' => true),
+        'category'          => array('type' => 'text', 'public' => true),
+        'subcategory'       => array('type' => 'text', 'public' => true),
+        'sub_subcategory'   => array('type' => 'text', 'public' => true),
+        'color'             => array('type' => 'text', 'public' => true),
+        'length'            => array('type' => 'text', 'public' => true),
+        'meter'             => array('type' => 'text', 'public' => true),
+        'meter_type'        => array('type' => 'text', 'default' => 'Hours', 'public' => true),
+        'intake_date'       => array('type' => 'text'),
+        'description'       => array('type' => 'wysiwyg', 'public' => true),
+        'seller_info'       => array('type' => 'wysiwyg'),
+        'featured'          => array('type' => 'bool', 'public' => true),
+        'show_on_website'   => array('type' => 'bool', 'default' => true, 'public' => true),
+        'facebook_sync'        => array('type' => 'bool', 'default' => false, 'public' => true),
+        'marketplace_posted'      => array('type' => 'bool', 'public' => true),
+        'marketplace_posted_date' => array('type' => 'text', 'virtual' => true),
+        // Tracking fields explicitly defined so they follow the schema default-deny rule
+        'deleted_at'          => array('type' => 'text', 'virtual' => true),
+        'last_action'         => array('type' => 'text', 'virtual' => true),
+        'last_actor_name'     => array('type' => 'text', 'virtual' => true),
+        'last_actor_initials' => array('type' => 'text', 'virtual' => true),
+        'last_action_at'      => array('type' => 'text', 'virtual' => true),
+        // Note: has_attachments, attachment_details, and drive are intentionally
+        // omitted — they have no corresponding ACF field in the field group and
+        // update_field() for unknown keys is a silent no-op.
+    );
+}
+
+function bridge_format_unit(int $post_id, string $context = 'edit'): ?array {
+    $post = get_post($post_id);
+    if (!$post) return null;
+
+    $config = bridge_get_equipment_fields_config();
+    $bulk = get_post_meta($post_id);
+    $acf_fields_to_keep = array('intake_date', 'vin_image', 'description', 'seller_info');
+
+    $data = array('id' => $post_id, 'title' => $post->post_title, 'created_at' => $post->post_date);
+
+    foreach ($config as $key => $meta) {
+        if (empty($meta['public']) && $context === 'public') {
+            continue;
+        }
+
+        if (!empty($meta['virtual'])) {
+            $data[$key] = get_post_meta($post_id, '_bridge_' . $key, true);
+            continue;
+        }
+
+        if (in_array($key, $acf_fields_to_keep, true)) {
+            $val = function_exists('get_field') ? get_field($key, $post_id) : null;
+        } else {
+            $val = array_key_exists($key, $bulk) ? $bulk[$key][0] : null;
+            // Subcategory may be stored as a serialized array after migration
+            if ($key === 'subcategory' && is_string($val)) {
+                $val = maybe_unserialize($val);
+            }
+        }
+
+        if ($meta['type'] === 'bool') {
+            $data[$key] = (bool) ($val !== false && $val !== null ? $val : ($meta['default'] ?? false));
+        } elseif ($meta['type'] === 'number') {
+            $data[$key] = (string) ($val ?? '');
+        } else {
+            $raw = $val ?: ($meta['default'] ?? '');
+            if ($meta['type'] === 'wysiwyg' && $raw && strip_tags($raw) === $raw) {
+                $raw = nl2br(esc_html($raw));
+            }
+            $data[$key] = $raw;
+        }
+    }
+
+    if ($context === 'public' && !empty($data['call_for_price'])) {
+        $data['price'] = '';
+    }
+
+    // ── Multi-subcategory read coercion ──────────────────────────────
+    // subcategory is transitioning from a single string to an array of
+    // strings. Coerce at the read layer so every consumer always gets
+    // an array, regardless of what is stored in postmeta.
+    if (isset($data['subcategory'])) {
+        $raw_sub = $data['subcategory'];
+        if (is_array($raw_sub)) {
+            // Already an array (post-migration or serialized) — filter empties
+            $data['subcategory'] = array_values(array_filter($raw_sub, 'strlen'));
+        } elseif (is_string($raw_sub) && $raw_sub !== '') {
+            $data['subcategory'] = array($raw_sub);
+        } else {
+            $data['subcategory'] = array();
+        }
+    }
+
+    $gallery = function_exists('get_field') ? get_field('gallery', $post_id) : array();
+    if (!is_array($gallery)) $gallery = array();
+    
+    $data['images']    = array();
+    $data['image_ids'] = array();
+    if (!empty($gallery)) {
+        foreach ($gallery as $img) {
+            if (is_array($img)) {
+                $data['images'][]   = $img['url'];
+                $data['image_ids'][] = $img['ID'];
+            } elseif (is_numeric($img)) {
+                $data['images'][]   = wp_get_attachment_url($img);
+                $data['image_ids'][] = intval($img);
+            }
+        }
+    }
+
+    $raw_implements = function_exists('get_field') ? get_field('implements', $post_id) : array();
+    if (!is_array($raw_implements)) $raw_implements = array();
+    
+    $data['implements'] = array();
+    if (!empty($raw_implements)) {
+        foreach ($raw_implements as $imp) {
+            $img_url = '';
+            $img_id  = 0;
+            if (!empty($imp['implement_image'])) {
+                $img_url = is_array($imp['implement_image']) ? $imp['implement_image']['url'] : wp_get_attachment_url($imp['implement_image']);
+                $img_id  = is_array($imp['implement_image']) ? $imp['implement_image']['ID'] : intval($imp['implement_image']);
+            }
+            $data['implements'][] = array(
+                'title'       => $imp['implement_title']       ?? '',
+                'price'       => $imp['implement_price']       ?? '',
+                'description' => $imp['implement_description'] ?? '',
+                'image'       => $img_url,
+                'image_id'    => $img_id,
+            );
+        }
+    }
+
+    return $data;
+}
+
+function bridge_purge_cache(int $post_id = 0): void {
+    if (class_exists('WpeCommon')) {
+        if ($post_id > 0 && method_exists('WpeCommon', 'purge_varnish_cache')) {
+            WpeCommon::purge_varnish_cache($post_id);
+        }
+        if (method_exists('WpeCommon', 'purge_varnish_cache_all')) {
+            WpeCommon::purge_varnish_cache_all();
+        }
+    }
+    if (function_exists('wp_cache_flush')) {
+        wp_cache_flush();
+    }
+}
+
+function bridge_save_unit_fields(int $post_id, array $data): void {
+    $config = bridge_get_equipment_fields_config();
+
+    foreach ($config as $key => $meta) {
+        if (!empty($meta['virtual'])) continue;
+        if (!array_key_exists($key, $data)) continue;
+
+        $val = $data[$key];
+        if ($meta['type'] === 'bool') {
+            update_field($key, (bool) $val, $post_id);
+        } elseif ($meta['type'] === 'number') {
+            update_field($key, floatval($val), $post_id);
+        } elseif ($meta['type'] === 'wysiwyg') {
+            $clean = wp_kses_post($val);
+            if (strip_tags($clean) === $clean) {
+                $clean = nl2br($clean);
+            }
+            update_field($key, $clean, $post_id);
+        } elseif ($key === 'subcategory') {
+            // ── Multi-subcategory write coercion ────────────────────────
+            // Accept string or array; always store as a serialized array.
+            if (is_array($val)) {
+                $arr = array_values(array_filter(array_map('sanitize_text_field', $val), 'strlen'));
+            } elseif (is_string($val) && $val !== '') {
+                $arr = array(sanitize_text_field($val));
+            } else {
+                $arr = array();
+            }
+            update_post_meta($post_id, 'subcategory', $arr);
+        } else {
+            update_field($key, sanitize_text_field($val), $post_id);
+        }
+    }
+
+    if (array_key_exists('image_ids', $data)) {
+        $ids = array_map('intval', (array) $data['image_ids']);
+        update_field('gallery', $ids, $post_id);
+        if (!empty($ids)) {
+            set_post_thumbnail($post_id, $ids[0]);
+        } else {
+            delete_post_thumbnail($post_id);
+        }
+    }
+
+    if (array_key_exists('implements', $data)) {
+        $rows = array();
+        foreach ((array) $data['implements'] as $imp) {
+            $rows[] = array(
+                'implement_title'       => sanitize_text_field($imp['title']       ?? ''),
+                'implement_price'       => sanitize_text_field($imp['price']       ?? ''),
+                'implement_description' => sanitize_textarea_field($imp['description'] ?? ''),
+                'implement_image'       => intval($imp['image_id'] ?? 0),
+            );
+        }
+        update_field('implements', $rows, $post_id);
+    }
+
+    if (function_exists('bridge_schedule_catalog_regeneration')) {
+        bridge_schedule_catalog_regeneration();
+    }
+
+    if (function_exists('bridge_purge_cache')) {
+        bridge_purge_cache($post_id);
+    }
+}
+
+function bridge_user_initials(WP_User $user): string {
+    $first = $user->first_name ?: '';
+    $last  = $user->last_name ?: '';
+
+    if ($first || $last) {
+        return strtoupper(substr($first, 0, 1) . substr($last, 0, 1));
+    }
+
+    $parts = preg_split('/\s+/', trim($user->display_name));
+    $initials = '';
+    foreach ($parts as $part) {
+        $initials .= substr($part, 0, 1);
+        if (strlen($initials) >= 2) break;
+    }
+    return strtoupper($initials);
+}
+
+function bridge_current_actor(): ?array {
+    $user = wp_get_current_user();
+    if (!$user || !$user->exists()) return null;
+
+    return array(
+        'id'           => $user->ID,
+        'display_name' => $user->display_name,
+        'initials'     => bridge_user_initials($user),
+    );
+}
+
+function bridge_request_id(WP_REST_Request $request): string {
+    $rid = $request->get_header('x-request-id');
+    if (!$rid) {
+        $rid = $request->get_param('request_id');
+    }
+    $rid = sanitize_text_field((string) $rid);
+    return $rid ? substr($rid, 0, 64) : '';
+}
+
+function bridge_update_last_meta(int $post_id, string $action, ?array $actor): void {
+    if (!$actor) return;
+    update_post_meta($post_id, '_bridge_last_action', $action);
+    update_post_meta($post_id, '_bridge_last_actor_name', $actor['display_name']);
+    update_post_meta($post_id, '_bridge_last_actor_initials', $actor['initials']);
+    update_post_meta($post_id, '_bridge_last_action_at', current_time('mysql'));
+}
+
+function bridge_log_ledger(int $post_id, string $action, string $summary, array $details = array(), string $request_id = ''): int {
+    global $wpdb;
+    $table  = $wpdb->prefix . 'bridge_inventory_ledger';
+    $actor  = bridge_current_actor();
+
+    if ($request_id) {
+        $existing = $wpdb->get_var($wpdb->prepare("SELECT id FROM {$table} WHERE request_id = %s LIMIT 1", $request_id));
+        if ($existing) {
+            return intval($existing);
+        }
+    }
+
+    $wpdb->insert(
+        $table,
+        array(
+            'post_id'      => $post_id,
+            'action'       => sanitize_text_field($action),
+            'user_id'      => $actor ? $actor['id'] : null,
+            'display_name' => $actor ? $actor['display_name'] : null,
+            'initials'     => $actor ? $actor['initials'] : null,
+            'summary'      => sanitize_text_field(substr($summary, 0, 255)),
+            'details'      => wp_json_encode($details),
+            'request_id'   => $request_id ?: null,
+            'created_at'   => current_time('mysql'),
+        ),
+        array('%d', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s')
+    );
+
+    bridge_update_last_meta($post_id, $action, $actor);
+    return $wpdb->insert_id;
+}
+
+function bridge_diff_unit(array $before, array $after): array {
+    $diff   = array();
+    $fields = array_keys(bridge_get_equipment_fields_config());
+    $fields[] = 'title';
+    $fields[] = 'show_on_website';
+    $fields[] = 'stock_status';
+
+    foreach ($fields as $key) {
+        if (!array_key_exists($key, $before) || !array_key_exists($key, $after)) continue;
+        if (is_array($before[$key]) || is_array($after[$key])) continue;
+        if ($before[$key] == $after[$key]) continue;
+        $diff[$key] = array('from' => $before[$key], 'to' => $after[$key]);
+    }
+
+    return $diff;
+}
+
+function bridge_diff_summary(array $diff): string {
+    if (empty($diff)) return 'updated unit';
+    $parts = array();
+    foreach ($diff as $field => $change) {
+        $parts[] = sprintf('%s: %s -> %s', $field, $change['from'], $change['to']);
+        if (count($parts) >= 3) break;
+    }
+    return implode('; ', $parts);
+}
+
+// ─── 6. SETTINGS DEFAULTS ────────────────────────────────────────────────────
+
+function bridge_backend_get_settings_defaults(): array {
+    return array(
+        'hero_title'                 => "Beyond the <br />\n<span class=\"text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-600\">Standard.</span>",
+        'hero_subtitle'              => "Your trusted local source for quality equipment. Discover solutions built for your toughest jobs.",
+        'hero_button1_text'          => "Shop Inventory",
+        'hero_button1_link'          => "/inventory",
+        'hero_button2_text'          => "Book Service",
+        'hero_button2_link'          => "/service-request",
+        'hero_video_url'             => "",
+        'support_hub_service_link'   => "/service-request",
+        'support_hub_parts_link'     => "",
+        'support_hub_finance_link'   => "/finance",
+        'youtube_tagline'            => "Bridge Media",
+        'youtube_title'              => "See Our Machines<br class=\"hidden sm:block\"/><span class=\"text-red-500 sm:inline block\">In Action</span>",
+        'youtube_paragraph'          => "Subscribe for equipment walkthroughs and demos.",
+        'youtube_channel_url'        => "",
+        'youtube_video_id'           => "",
+        'youtube_custom_thumbnail'   => "",
+        'cta_title'                  => "What's Next On<br class=\"hidden sm:block\" />\nYour To-Do List?",
+        'cta_text'                   => "We are your trusted local source for quality equipment you can rely on.",
+        'cta_button_text'            => "Learn more",
+        'cta_button_link'            => "/dealer-info/about-us",
+        'about_why_choose_us_title'  => "Why Choose Us?",
+        'about_why_choose_us_bullets'=> array(),
+        'contact_email'              => "sales@example.com",
+        'sales_email'                => "sales@example.com",
+        'parts_email'                => "parts@example.com",
+        'service_email'              => "service@example.com",
+        'contact_phone'              => "(555) 555-0100",
+        'contact_phone_raw'          => "5555550100",
+        'contact_address_line1'      => "123 Main St",
+        'contact_address_line2'      => "Anytown, USA",
+        'contact_map_link'           => "",
+        'contact_map_embed_url'      => "",
+        'hours_mon_fri'              => "8am - 5pm",
+        'hours_sat'                  => "9am - Noon",
+        'hours_sun'                  => "Closed",
+        'social_facebook'            => "",
+        'social_youtube'             => "",
+        'social_custom_links'        => array(),
+        'employment_tagline'         => 'Join The Crew',
+        'employment_headline'        => 'Career Opportunities',
+        'employment_intro'           => 'We are always looking for hardworking, reliable individuals. If you have a passion for heavy equipment and a dedication to customer service, we want to hear from you.',
+        'employment_jobs'            => array(
+            array(
+                'job_title'       => 'Open Position',
+                'job_type'        => 'Full-Time',
+                'job_location'    => 'Your City, ST',
+                'job_description' => 'Contact us to learn about current openings.',
+                'job_show_badge'  => false,
+                'job_badge_text'  => '',
+            ),
+        ),
+        'finance_cards'              => array(
+            array(
+                'name'            => 'Wells Fargo',
+                'logo'            => 'WellsFargo_red.png',
+                'application_pdf' => 'Wells-Fargo-Application.pdf',
+                'description'     => '',
+                'alt'             => 'Wells Fargo logo',
+            ),
+            array(
+                'name'            => 'Sheffield Finance',
+                'logo'            => 'SheffieldFinance_Green.png',
+                'application_pdf' => 'sheffield-application-rev.pdf',
+                'description'     => '',
+                'alt'             => 'Sheffield Finance logo',
+            ),
+            array(
+                'name'            => 'DLL Finance',
+                'logo'            => 'DLLFinance_blue.png',
+                'application_pdf' => 'dll-application-rev.pdf',
+                'description'     => '',
+                'alt'             => 'DLL Finance logo',
+            ),
+            array(
+                'name'            => 'AGDirect',
+                'logo'            => 'AGDirect_Gray.png',
+                'application_pdf' => 'AgDirect-Application.pdf',
+                'description'     => '',
+                'alt'             => 'AGDirect logo',
+            ),
+        ),
+    );
+}
+
+// Note: bridge_get_theme_settings_defaults() is defined in the theme's functions.php.
+// The plugin accesses settings defaults directly via bridge_backend_get_settings_defaults().
+// A second definition here was removed to prevent a PHP fatal 'Cannot redeclare function' error.
+
+/**
+ * Block common AI crawler bots via robots.txt and sanitize output for Lighthouse SEO compliance
+ */
+add_filter('robots_txt', function (string $output, bool $public): string {
+    // Strip Crawl-delay directives that cause Lighthouse validation warnings
+    $output = preg_replace('/Crawl-delay:\s*\d+/i', '', $output);
+    
+    $crawlers = array(
+        'User-agent: GPTBot',
+        'Disallow: /',
+        'User-agent: ChatGPT-User',
+        'Disallow: /',
+        'User-agent: Google-Extended',
+        'Disallow: /',
+        'User-agent: Anthropic-AI',
+        'Disallow: /',
+        'User-agent: Claude-Web',
+        'Disallow: /',
+        'User-agent: ClaudeBot',
+        'Disallow: /',
+        'User-agent: CCBot',
+        'Disallow: /',
+        'User-agent: Omgilibot',
+        'Disallow: /',
+        'User-agent: FacebookBot',
+        'Disallow: /',
+        'User-agent: Diffbot',
+        'Disallow: /',
+        'User-agent: Bytespider',
+        'Disallow: /',
+        'User-agent: ImagesiftBot',
+        'Disallow: /',
+        'User-agent: PerplexityBot',
+        'Disallow: /',
+        'User-agent: Cohesive-Bot',
+        'Disallow: /',
+    );
+    return trim($output) . "\n\n" . implode("\n", $crawlers) . "\n";
+}, 999, 2);
+
+// ─── One-Time Migration: subcategory string → array ─────────────────────────
+// Converts every equipment post's subcategory meta from a plain string to a
+// serialized one-element array. Idempotent: skips values already stored as
+// arrays. Gated by option flag so it runs exactly once.
+
+add_action('admin_init', 'bridge_migrate_subcategory_to_array');
+function bridge_migrate_subcategory_to_array(): void {
+    if (get_option('bridge_subcategory_migrated_to_array')) {
+        return; // Already ran
+    }
+
+    global $wpdb;
+
+    $post_ids = $wpdb->get_col(
+        "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'equipment' AND post_status IN ('publish', 'draft', 'trash')"
+    );
+
+    if (empty($post_ids)) {
+        update_option('bridge_subcategory_migrated_to_array', time());
+        return;
+    }
+
+    $migrated = 0;
+    $skipped  = 0;
+
+    foreach ($post_ids as $pid) {
+        $raw = get_post_meta($pid, 'subcategory', true);
+
+        // Already a serialized array — skip
+        if (is_array($raw)) {
+            $skipped++;
+            continue;
+        }
+
+        // String → one-element array (or empty array)
+        $arr = ($raw !== '' && $raw !== null && $raw !== false)
+            ? array((string) $raw)
+            : array();
+
+        update_post_meta($pid, 'subcategory', $arr);
+        $migrated++;
+    }
+
+    update_option('bridge_subcategory_migrated_to_array', time());
+
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log("[Bridge OS] Subcategory migration complete: {$migrated} converted, {$skipped} already arrays, out of " . count($post_ids) . " total.");
+    }
+}
+
+/**
+ * 🔒 SECURITY HARDENING: Block Public User Enumeration & REST User Endpoints
+ */
+add_filter( 'rest_authentication_errors', function ( $result ) {
+    if ( ! empty( $result ) ) {
+        return $result;
+    }
+    $req_uri = $_SERVER['REQUEST_URI'] ?? '';
+    if ( ! is_user_logged_in() && ( strpos( $req_uri, '/wp/v2/users' ) !== false || strpos( $req_uri, 'wp/v2/users' ) !== false ) ) {
+        return new WP_Error( 'rest_user_cannot_view', 'User enumeration is disabled.', array( 'status' => 401 ) );
+    }
+    return $result;
+} );
+
+add_filter( 'rest_endpoints', function ( $endpoints ) {
+    if ( ! is_user_logged_in() ) {
+        if ( isset( $endpoints['/wp/v2/users'] ) ) {
+            unset( $endpoints['/wp/v2/users'] );
+        }
+        if ( isset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] ) ) {
+            unset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] );
+        }
+    }
+    return $endpoints;
+} );
+
+// 2. Block author parameter query enumeration (e.g. ?author=1 or /author/username/)
+add_action( 'template_redirect', function () {
+    if ( is_author() || ( isset( $_GET['author'] ) && ! is_admin() ) ) {
+        wp_safe_redirect( home_url( '/' ), 301 );
+        exit;
+    }
+} );
+
+// 3. Prevent oEmbed user discovery (/wp-json/oembed/1.0/embed?url=...)
+add_filter( 'oembed_response_data', function ( $data ) {
+    if ( isset( $data['author_name'] ) ) {
+        unset( $data['author_name'] );
+    }
+    if ( isset( $data['author_url'] ) ) {
+        unset( $data['author_url'] );
+    }
+    return $data;
+} );
+
