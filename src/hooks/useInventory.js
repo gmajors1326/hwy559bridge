@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect, useCallback, useRef } from 'react';
 import { arrayMove } from '@dnd-kit/sortable';
 import { apiFetch, uploadFile } from '../utils/api';
+import { compressImage } from '../utils/imageCompress';
 import { apiToLocal, apiToListItem } from '../utils/helpers';
 import { DEFAULT_EMPTY_UNIT, getCategoryLabel } from '../constants/inventoryConstants';
 
@@ -439,7 +440,7 @@ export function useInventory(showToast, setActiveTab) {
     setIsUploadingImages(true);
     showToast('Uploading images...', 'info');
     try {
-      const results = await Promise.all(files.map(uploadFile));
+      const results = await Promise.all(files.map(async f => uploadFile(await compressImage(f))));
       setUnitData(prev => ({
         ...prev,
         images: [...prev.images, ...results.map(r => r.url)],
@@ -486,7 +487,7 @@ export function useInventory(showToast, setActiveTab) {
 
   const handleImplementImageUpload = async (index, file) => {
     try {
-      const result = await uploadFile(file);
+      const result = await uploadFile(await compressImage(file));
       handleUpdateImplement(index, 'image', result.url);
       handleUpdateImplement(index, 'image_id', result.id);
     } catch (err) {
