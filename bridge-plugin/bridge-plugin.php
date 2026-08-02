@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Bridge
- * Description: Version 1.0.0 - React-powered inventory management for equipment dealers.
- * Version: 1.0.0
+ * Description: Version 1.0.3 - React-powered inventory management for equipment dealers.
+ * Version: 1.0.3
  * Author: hwy559.com
  */
 
