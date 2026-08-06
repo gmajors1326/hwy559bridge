@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bridge OS — Inventory Management for Equipment Dealers | hwy559bridge.com</title>
+<meta name="description" content="One system to run your dealership: inventory, website, marketplace sync, mobile, and analytics. From first search to final sale. Bridge OS by hwy559.com." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --orange: #EF8522;
+    --orange-dark: #d4700e;
+    --orange-soft: rgba(239,133,34,.12);
+    --black: #000000;
+    --ink: #0a0a0a;
+    --white: #ffffff;
+    --gray-50: #f7f7f8;
+    --gray-100: #ececee;
+    --gray-200: #dcdcdf;
+    --gray-400: #9a9a9f;
+    --gray-600: #5c5c62;
+    --radius: 16px;
+    --shadow: 0 10px 30px rgba(0,0,0,.08);
+    --shadow-lg: 0 24px 60px rgba(0,0,0,.18);
+    --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:var(--font); color:var(--ink); background:var(--white); line-height:1.6; -webkit-font-smoothing:antialiased; }
+  img { display:block; max-width:100%; }
+  a { text-decoration:none; color:inherit; }
+  .container { max-width:1200px; margin:0 auto; padding:0 24px; }
+  .section { padding:96px 0; }
+
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:10px; font-weight:700; font-size:15px; padding:14px 28px; border-radius:10px; border:2px solid transparent; cursor:pointer; transition:.18s ease; letter-spacing:.01em; }
+  .btn-orange { background:var(--orange); color:var(--white); }
+  .btn-orange:hover { background:var(--orange-dark); transform:translateY(-2px); box-shadow:0 12px 24px rgba(239,133,34,.35); }
+  .btn-black { background:var(--black); color:var(--white); }
+  .btn-black:hover { background:#1c1c1c; transform:translateY(-2px); }
+  .btn-ghost { border-color:rgba(255,255,255,.5); color:var(--white); background:transparent; }
+  .btn-ghost:hover { border-color:var(--white); background:rgba(255,255,255,.08); }
+  .btn-white { background:var(--white); color:var(--black); }
+  .btn-white:hover { transform:translateY(-2px); box-shadow:0 12px 24px rgba(255,255,255,.25); }
+  .btn-outline { border-color:var(--black); color:var(--black); background:transparent; }
+  .btn-outline:hover { background:var(--black); color:var(--white); }
+
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:13px; text-transform:uppercase; letter-spacing:.14em; color:var(--orange); }
+  .eyebrow::before { content:""; width:28px; height:2px; background:var(--orange); border-radius:2px; }
+  .h1 { font-size:clamp(38px,5.4vw,62px); font-weight:900; line-height:1.04; letter-spacing:-.02em; }
+  .h2 { font-size:clamp(30px,3.6vw,44px); font-weight:900; line-height:1.08; letter-spacing:-.02em; }
+  .h3 { font-size:clamp(20px,2vw,25px); font-weight:800; line-height:1.22; letter-spacing:-.01em; }
+  .lead { font-size:18px; color:var(--gray-600); }
+  .center { text-align:center; }
+  .center .eyebrow::before { display:none; }
+
+  /* ── Top bar ─────────────────────────────── */
+  .topbar { background:var(--black); color:var(--white); font-size:13px; font-weight:500; padding:9px 0; }
+  .topbar .container { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .topbar a { color:var(--orange); font-weight:700; }
+  .topbar a:hover { text-decoration:underline; }
+  .topbar .sep { opacity:.3; margin:0 8px; }
+
+  /* ── Header ──────────────────────────────── */
+  .site-header { position:sticky; top:0; z-index:50; background:rgba(255,255,255,.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--gray-100); }
+  .nav { display:flex; align-items:center; justify-content:space-between; height:76px; gap:24px; }
+  .logo { display:flex; align-items:center; gap:12px; }
+  .logo-mark { width:42px; height:42px; border-radius:10px; background:var(--black); color:var(--orange); display:grid; place-items:center; font-size:20px; font-weight:900; }
+  .logo-word { font-weight:900; font-size:21px; letter-spacing:-.02em; line-height:1; }
+  .logo-word small { display:block; font-size:10px; font-weight:700; letter-spacing:.24em; text-transform:uppercase; color:var(--gray-400); margin-top:4px; }
+  .nav-links { display:flex; align-items:center; gap:28px; list-style:none; font-weight:600; font-size:14.5px; }
+  .nav-links a { position:relative; padding:6px 0; color:#2a2a2a; }
+  .nav-links a::after { content:""; position:absolute; left:0; bottom:0; width:0; height:2px; background:var(--orange); transition:.2s; }
+  .nav-links a:hover::after { width:100%; }
+  .nav-cta { display:flex; align-items:center; gap:14px; }
+  .nav-cta .btn { padding:11px 20px; font-size:14px; }
+  .burger { display:none; background:none; border:none; cursor:pointer; padding:6px; }
+
+  /* ── Hero ────────────────────────────────── */
+  .hero { position:relative; background:var(--black); color:var(--white); overflow:hidden; }
+  .hero::before { content:""; position:absolute; top:-260px; right:-160px; width:640px; height:640px; border-radius:50%; background:radial-gradient(circle, rgba(239,133,34,.35), transparent 65%); }
+  .hero-grid { position:relative; display:grid; grid-template-columns:1.02fr .98fr; gap:64px; align-items:center; padding:96px 0 110px; }
+  .hero .h1 em { font-style:normal; color:var(--orange); }
+  .hero .lead { color:#c9c9c9; font-size:19px; max-width:560px; margin-top:22px; }
+  .hero-actions { display:flex; gap:14px; flex-wrap:wrap; margin-top:38px; }
+  .hero-tabs { display:flex; gap:6px; margin-top:56px; flex-wrap:wrap; }
+  .hero-tab { font-size:13px; font-weight:700; padding:9px 16px; border:1px solid rgba(255,255,255,.2); border-radius:999px; color:#cfcfcf; transition:.2s; }
+  .hero-tab:hover, .hero-tab.on { border-color:var(--orange); background:rgba(239,133,34,.14); color:var(--orange); }
+
+  /* Dashboard mock */
+  .browser { background:var(--white); border-radius:14px; overflow:hidden; box-shadow:0 40px 90px rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.1); }
+  .browser-bar { display:flex; align-items:center; gap:8px; background:#f1f1f3; padding:10px 14px; }
+  .browser-bar i { width:11px; height:11px; border-radius:50%; background:#d9d9dd; }
+  .browser-bar i:nth-child(1) { background:#ff5f57; } .browser-bar i:nth-child(2) { background:#febc2e; } .browser-bar i:nth-child(3) { background:#28c840; }
+  .browser-bar span { margin-left:10px; font-size:11px; color:var(--gray-400); background:#fff; border:1px solid var(--gray-100); padding:3px 12px; border-radius:6px; flex:1; max-width:340px; }
+  .app { display:grid; grid-template-columns:200px 1fr; min-height:400px; }
+  .app-side { background:var(--black); color:var(--white); padding:20px 14px; }
+  .app-side .app-logo { display:flex; align-items:center; gap:8px; font-weight:900; font-size:14px; padding:2px 8px 16px; }
+  .app-side .app-logo i { width:22px; height:22px; border-radius:6px; background:var(--orange); color:#fff; font-style:normal; font-size:11px; display:grid; place-items:center; font-weight:900; }
+  .app-side ul { list-style:none; }
+  .app-side li { font-size:12px; font-weight:600; color:#b9b9b9; padding:9px 10px; border-radius:8px; margin-bottom:2px; display:flex; align-items:center; gap:9px; }
+  .app-side li.on { background:rgba(239,133,34,.18); color:var(--orange); }
+  .app-side li i { font-style:normal; font-size:13px; opacity:.8; width:16px; }
+  .app-main { padding:22px 24px; background:var(--gray-50); }
+  .kpi-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:18px; }
+  .kpi { background:#fff; border:1px solid var(--gray-100); border-radius:10px; padding:14px 16px; }
+  .kpi span { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--gray-400); }
+  .kpi b { display:block; font-size:20px; font-weight:900; letter-spacing:-.02em; margin-top:4px; }
+  .kpi b i { font-style:normal; color:var(--orange); }
+  .table-head { display:grid; grid-template-columns:1.4fr .7fr .8fr .6fr; gap:10px; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--gray-400); padding:0 14px 8px; }
+  .row { display:grid; grid-template-columns:1.4fr .7fr .8fr .6fr; gap:10px; align-items:center; background:#fff; border:1px solid var(--gray-100); border-radius:10px; padding:10px 14px; margin-bottom:8px; font-size:12px; }
+  .row .unit { display:flex; align-items:center; gap:10px; font-weight:700; }
+  .row .thumb { width:36px; height:28px; border-radius:6px; background:var(--gray-100); flex:none; }
+  .row .price { font-weight:800; }
+  .row .st { justify-self:end; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; padding:4px 10px; border-radius:999px; background:var(--orange-soft); color:var(--orange); }
+  .row .st.live { background:rgba(34,197,94,.12); color:#16a34a; }
+
+  /* ── Stats band ──────────────────────────── */
+  .stats { border-top:1px solid var(--gray-100); background:var(--gray-50); }
+  .stats .container { display:grid; grid-template-columns:repeat(4,1fr); gap:28px; padding:44px 24px; }
+  .stat b { display:block; font-size:34px; font-weight:900; letter-spacing:-.03em; }
+  .stat b i { font-style:normal; color:var(--orange); }
+  .stat span { font-size:13px; font-weight:600; color:var(--gray-600); }
+
+  /* ── Value props ─────────────────────────── */
+  .value-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:56px; }
+  .value-card { background:var(--white); border:1px solid var(--gray-100); border-radius:var(--radius); padding:34px 30px; transition:.25s ease; }
+  .value-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-lg); border-color:transparent; }
+  .value-icon { width:56px; height:56px; border-radius:14px; background:var(--orange-soft); color:var(--orange); display:grid; place-items:center; font-size:24px; font-weight:900; margin-bottom:20px; }
+  .value-card p { color:var(--gray-600); margin-top:12px; font-size:15px; }
+  .value-card a { display:inline-flex; align-items:center; gap:6px; margin-top:18px; font-weight:700; font-size:14px; color:var(--orange); }
+  .value-card a:hover { gap:10px; }
+  .value-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:18px; }
+  .value-tags span { font-size:11px; font-weight:700; color:var(--gray-600); background:var(--gray-50); border:1px solid var(--gray-100); padding:4px 10px; border-radius:999px; }
+
+  /* ── Dark feature band ───────────────────── */
+  .dark-band { background:var(--black); color:var(--white); position:relative; overflow:hidden; }
+  .dark-band::before { content:""; position:absolute; top:-200px; right:-200px; width:520px; height:520px; border-radius:50%; background:radial-gradient(circle, rgba(239,133,34,.28), transparent 65%); }
+  .dark-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; position:relative; }
+  .dark-card { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:var(--radius); padding:36px 30px; transition:.25s; }
+  .dark-card:hover { background:rgba(239,133,34,.1); border-color:rgba(239,133,34,.4); transform:translateY(-4px); }
+  .dark-card .num { font-size:14px; font-weight:800; color:var(--orange); letter-spacing:.08em; }
+  .dark-card h3 { font-size:20px; font-weight:800; margin:14px 0 10px; }
+  .dark-card p { color:#b9b9b9; font-size:15px; }
+  .dark-cta { text-align:center; margin-top:64px; position:relative; }
+
+  /* ── Feature split ───────────────────────── */
+  .feature { display:grid; grid-template-columns:1.05fr .95fr; gap:72px; align-items:center; }
+  .feature.flip .feature-media { order:-1; }
+  .feature-media { border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-lg); border:1px solid var(--gray-100); }
+  .feature-media img { width:100%; height:100%; object-fit:cover; }
+  .feature ul { list-style:none; margin-top:26px; }
+  .feature li { display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--gray-100); font-weight:600; font-size:16px; }
+  .feature li::before { content:"✓"; flex:none; width:26px; height:26px; border-radius:50%; background:var(--orange); color:var(--white); display:grid; place-items:center; font-size:13px; font-weight:900; margin-top:1px; }
+
+  /* ── Independent question (Why Bridge OS) ── */
+  .ind-grid { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:56px; align-items:stretch; }
+  .ind-col { border-radius:var(--radius); overflow:hidden; display:flex; flex-direction:column; }
+  .ind-col.old { background:var(--gray-50); border:1px solid var(--gray-100); }
+  .ind-col.bridge { background:var(--black); color:var(--white); box-shadow:var(--shadow-lg); }
+  .ind-head { padding:30px 32px; border-bottom:1px solid var(--gray-100); }
+  .ind-col.old .ind-head { border-color:var(--gray-100); }
+  .ind-col.bridge .ind-head { border-color:rgba(255,255,255,.12); }
+  .ind-head .brand-chip { display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--gray-400); }
+  .ind-head .brand-chip i { width:26px; height:26px; border-radius:7px; background:var(--gray-200); flex:none; }
+  .ind-head h3 { font-size:26px; font-weight:900; letter-spacing:-.02em; margin-top:10px; }
+  .ind-head p { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; margin-top:4px; }
+  .ind-col.old .ind-head p { color:var(--gray-400); }
+  .ind-col.bridge .ind-head p { color:var(--orange); }
+  .ind-col.bridge .ind-head h3 { color:#fff; }
+  .ind-col ul { list-style:none; padding:12px 32px 32px; display:flex; flex-direction:column; flex:1; }
+  .ind-col li { display:flex; gap:14px; padding:17px 0; border-bottom:1px solid var(--gray-100); font-size:15px; font-weight:600; line-height:1.5; }
+  .ind-col li:last-child { border-bottom:none; }
+  .ind-col.old li { color:var(--gray-600); border-color:var(--gray-100); }
+  .ind-col.bridge li { color:#e7e7e7; border-color:rgba(255,255,255,.1); }
+  .ind-col li::before { flex:none; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; font-size:12px; font-weight:900; margin-top:1px; }
+  .ind-col.old li::before { content:"✕"; background:rgba(220,38,38,.1); color:#dc2626; }
+  .ind-col.bridge li::before { content:"✓"; background:var(--orange); color:#fff; }
+
+  /* ── Testimonials ────────────────────────── */
+  .quote-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:56px; }
+  .quote { background:var(--white); border:1px solid var(--gray-100); border-radius:var(--radius); padding:30px; }
+  .quote .stars { color:var(--orange); font-size:16px; letter-spacing:2px; margin-bottom:14px; }
+  .quote blockquote { font-size:15px; color:var(--gray-600); }
+  .quote footer { margin-top:18px; font-size:13px; font-weight:800; }
+  .quote footer span { display:block; font-weight:600; color:var(--gray-400); }
+
+  /* ── CTA band ────────────────────────────── */
+  .cta-band { background:linear-gradient(120deg, var(--orange), #ff9d47); color:var(--white); position:relative; overflow:hidden; padding:72px 0; }
+  .cta-band::after { content:""; position:absolute; bottom:-80px; left:-80px; width:280px; height:280px; border-radius:50%; background:rgba(255,255,255,.15); }
+  .cta-inner { display:flex; align-items:center; justify-content:space-between; gap:40px; flex-wrap:wrap; position:relative; }
+  .cta-inner h2 { font-size:clamp(28px,3.4vw,42px); font-weight:900; letter-spacing:-.02em; line-height:1.08; }
+  .cta-inner p { margin-top:12px; font-size:17px; opacity:.92; max-width:560px; }
+  .cta-inner .btn { background:var(--black); color:var(--white); }
+  .cta-inner .btn:hover { background:#1c1c1c; box-shadow:0 12px 24px rgba(0,0,0,.3); }
+
+  /* ── Demo form ───────────────────────────── */
+  .demo { background:var(--gray-50); }
+  .demo-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:64px; margin-top:56px; align-items:start; }
+  .demo-list { list-style:none; margin-top:28px; }
+  .demo-list li { display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--gray-100); font-weight:600; }
+  .demo-list .ico { flex:none; width:38px; height:38px; border-radius:10px; background:var(--orange-soft); color:var(--orange); display:grid; place-items:center; font-size:16px; font-weight:900; }
+  .demo-list small { display:block; font-weight:500; color:var(--gray-400); font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+  .form-card { background:var(--white); border-radius:var(--radius); padding:40px; box-shadow:var(--shadow); border:1px solid var(--gray-100); }
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:24px; }
+  .field { display:flex; flex-direction:column; gap:8px; }
+  .field.full { grid-column:1/-1; }
+  .field label { font-size:13px; font-weight:700; }
+  .field input, .field select, .field textarea { border:1.5px solid var(--gray-200); border-radius:10px; padding:13px 15px; font-family:inherit; font-size:15px; transition:.15s; background:var(--white); }
+  .field input:focus, .field select:focus, .field textarea:focus { outline:none; border-color:var(--orange); box-shadow:0 0 0 3px rgba(239,133,34,.15); }
+  .field textarea { min-height:90px; resize:vertical; }
+  .checkline { grid-column:1/-1; display:flex; gap:10px; align-items:flex-start; font-size:12.5px; color:var(--gray-600); }
+  .checkline input { margin-top:2px; accent-color:var(--orange); }
+  .form-card .btn { width:100%; margin-top:20px; }
+  .form-note { text-align:center; font-size:12px; color:var(--gray-400); margin-top:14px; }
+
+  /* ── Footer ──────────────────────────────── */
+  footer { background:var(--black); color:var(--white); padding:72px 0 40px; }
+  .foot-grid { display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:48px; }
+  .foot-grid h4 { font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:var(--orange); margin-bottom:18px; }
+  .foot-grid ul { list-style:none; }
+  .foot-grid li { margin-bottom:12px; font-size:14px; color:#b9b9b9; }
+  .foot-grid a:hover { color:var(--orange); }
+  .foot-brand p { color:#9a9a9f; font-size:14px; margin-top:16px; max-width:340px; }
+  .foot-bottom { border-top:1px solid rgba(255,255,255,.12); margin-top:56px; padding-top:28px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; font-size:13px; color:#9a9a9f; }
+  .foot-bottom .legal a { margin-left:18px; color:#9a9a9f; }
+  .foot-bottom .legal a:hover { color:var(--orange); }
+  .foot-bottom .madeby a { color:var(--orange); font-weight:700; }
+
+  @media (max-width: 1024px) {
+    .hero-grid { grid-template-columns:1fr; gap:48px; }
+    .value-grid, .dark-grid, .quote-grid { grid-template-columns:repeat(2,1fr); }
+    .stats .container { grid-template-columns:repeat(2,1fr); }
+    .feature { grid-template-columns:1fr; gap:40px; }
+    .feature.flip .feature-media { order:0; }
+    .demo-grid { grid-template-columns:1fr; gap:40px; }
+    .foot-grid { grid-template-columns:1fr 1fr; }
+    .app { grid-template-columns:1fr; }
+    .app-side { display:none; }
+    .nav-links { display:none; }
+    .burger { display:block; }
+  }
+  @media (max-width: 640px) {
+    .section { padding:72px 0; }
+    .value-grid, .dark-grid, .quote-grid, .ind-grid { grid-template-columns:1fr; }
+    .form-grid { grid-template-columns:1fr; }
+    .nav-cta .btn:first-child { display:none; }
+    .kpi-row { grid-template-columns:1fr; }
+  }
+
+  /* Reveal on scroll */
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity:1; transform:none; }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="container">
+    <div>Bridge OS — The dealership operating system</div>
+    <div>Current customer? <a href="#demo">Talk to us</a><span class="sep">•</span><a href="tel:+15595590100">(559) 555-0100</a></div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="container nav">
+    <a href="#" class="logo">
+      <div class="logo-mark">⛭</div>
+      <div class="logo-word">BRIDGE<small>OS · hwy559bridge.com</small></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#platform">Platform</a></li>
+      <li><a href="#industries">Industries</a></li>
+      <li><a href="#difference">Why Bridge OS</a></li>
+      <li><a href="#customers">Customer Success</a></li>
+      <li><a href="#resources">Resources</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#demo" class="btn btn-orange">Get A Demo</a>
+      <button class="burger" aria-label="Menu">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">Inventory Management For Dealerships</span>
+      <h1 class="h1" style="margin-top:18px;">Get More Leads.<br />Sell More Inventory.<br /><em>Grow Your Dealership.</em></h1>
+      <p class="lead">From first search to final sale — your inventory, website, marketplace feeds, and analytics work together in one system, so your team doesn't have to patch it all together by hand.</p>
+      <div class="hero-actions">
+        <a href="#demo" class="btn btn-orange">Get A Demo</a>
+        <a href="#platform" class="btn btn-ghost">See How It Works</a>
+      </div>
+      <div class="hero-tabs">
+        <span class="hero-tab on">Organize Inventory</span>
+        <span class="hero-tab">Showcase On Your Website</span>
+        <span class="hero-tab">Sync Marketplaces</span>
+        <span class="hero-tab">Sell From Mobile</span>
+        <span class="hero-tab">Track Everything</span>
+      </div>
+    </div>
+    <div class="browser reveal">
+      <div class="browser-bar"><i></i><i></i><i></i><span>bridge.hwy559.com</span></div>
+      <div class="app">
+        <div class="app-side">
+          <div class="app-logo"><i>B</i>Bridge OS</div>
+          <ul>
+            <li class="on"><i>▦</i>Dashboard</li>
+            <li><i>☰</i>Inventory</li>
+            <li><i>⌘</i>Categories</li>
+            <li><i>◉</i>Marketplace</li>
+            <li><i>▶</i>Videos</li>
+            <li><i>▤</i>Pages</li>
+            <li><i>☎</i>Mobile</li>
+            <li><i>⚙</i>Settings</li>
+          </ul>
+        </div>
+        <div class="app-main">
+          <div class="kpi-row">
+            <div class="kpi"><span>Units Online</span><b><i>142</i></b></div>
+            <div class="kpi"><span>This Month</span><b>+18</b></div>
+            <div class="kpi"><span>Listings Posted</span><b><i>39</i></b></div>
+          </div>
+          <div class="table-head"><span>Unit</span><span>Category</span><span>Price</span><span>Status</span></div>
+          <div class="row"><span class="unit"><i class="thumb"></i>Kubota L3901</span><span>Compact Tractor</span><span class="price">$24,500</span><span class="st live">Live</span></div>
+          <div class="row"><span class="unit"><i class="thumb"></i>John Deere 5075E</span><span>Utility Tractor</span><span class="price">$38,900</span><span class="st live">Live</span></div>
+          <div class="row"><span class="unit"><i class="thumb"></i>Big Tex 14GX</span><span>Dump Trailer</span><span class="price">$17,400</span><span class="st">Draft</span></div>
+          <div class="row"><span class="unit"><i class="thumb"></i>Polaris Ranger XP 1000</span><span>UTV</span><span class="price">$15,900</span><span class="st live">Live</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats band -->
+<div class="stats">
+  <div class="container">
+    <div class="stat"><b><i>One</i></b><span>Source of truth for inventory</span></div>
+    <div class="stat"><b><i>200</i>+</b><span>Marketplace &amp; feed destinations</span></div>
+    <div class="stat"><b><i>24</i>hr</b><span>Support resolution target</span></div>
+    <div class="stat"><b><i>99.9</i>%</b><span>Uptime</span></div>
+  </div>
+</div>
+
+<!-- More than software -->
+<section class="section" id="platform">
+  <div class="container">
+    <div class="center">
+      <span class="eyebrow">One Platform. Three Ways It Pays Off.</span>
+      <h2 class="h2" style="margin-top:16px;">Built for the realities of modern dealerships.</h2>
+      <p class="lead" style="margin-top:16px; max-width:680px; margin-left:auto; margin-right:auto;">More channels. More competition. More inventory. Less time. Bridge OS gets your listings to every shopper — and keeps your whole store in one place.</p>
+    </div>
+    <div class="value-grid">
+      <div class="value-card reveal">
+        <div class="value-icon">◎</div>
+        <h3 class="h3">Attract more buyers</h3>
+        <p>A fast, mobile-first showroom built straight from your inventory. Every publish updates your website instantly — structured so Google finds it, designed so buyers stay.</p>
+        <div class="value-tags"><span>Public Showroom</span><span>Page Editor</span><span>SEO-Ready</span></div>
+        <a href="#demo">Read more →</a>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon">⇄</div>
+        <h3 class="h3">Convert more shoppers</h3>
+        <p>Syndicate listings to marketplaces in one click. Complete specs, fresh photos, accurate pricing — everywhere a buyer looks, without re-typing a single unit.</p>
+        <div class="value-tags"><span>Marketplace Sync</span><span>Meta Catalogs</span><span>CSV Export</span></div>
+        <a href="#demo">Read more →</a>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon">⚙</div>
+        <h3 class="h3">Run the store with the team you have</h3>
+        <p>Inventory, categories, media, videos, pages, and analytics — one connected system. No spreadsheets, no separate tools, no double entry.</p>
+        <div class="value-tags"><span>Category Tree</span><span>Media Manager</span><span>Analytics</span></div>
+        <a href="#demo">Read more →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Dark feature band -->
+<section class="section dark-band">
+  <div class="container">
+    <div class="center">
+      <span class="eyebrow">Under The Hood</span>
+      <h2 class="h2" style="margin-top:16px; color:#fff;">Selling equipment is hard enough.<br />The software shouldn't be.</h2>
+      <p class="lead" style="margin-top:16px; max-width:640px; margin-left:auto; margin-right:auto; color:#cfcfcf;">Every feature exists to get accurate inventory in front of more shoppers with less manual work.</p>
+    </div>
+    <div class="dark-grid" style="margin-top:56px;">
+      <div class="dark-card reveal">
+        <div class="num">01</div>
+        <h3>One live inventory ledger</h3>
+        <p>Units, specs, pricing, images, and status in one place. Edit once — your website and marketplace feeds update together.</p>
+      </div>
+      <div class="dark-card reveal">
+        <div class="num">02</div>
+        <h3>Smart categories &amp; search</h3>
+        <p>A renames-safe category tree keeps inventory organized the way buyers actually shop — tractors, trailers, UTVs, and more.</p>
+      </div>
+      <div class="dark-card reveal">
+        <div class="num">03</div>
+        <h3>Photos, optimized automatically</h3>
+        <p>Images are compressed on upload so your pages load fast everywhere — no more 12MB phone photos tanking your site speed.</p>
+      </div>
+      <div class="dark-card reveal">
+        <div class="num">04</div>
+        <h3>Marketplace posting built in</h3>
+        <p>Push units to Meta and other channels, track what's posted, and never lose a listing to a forgotten manual update.</p>
+      </div>
+      <div class="dark-card reveal">
+        <div class="num">05</div>
+        <h3>Sell from the field</h3>
+        <p>The mobile companion app lets your team pull up units, specs, and photos on a customer's lot — no desktop required.</p>
+      </div>
+      <div class="dark-card reveal">
+        <div class="num">06</div>
+        <h3>Full history &amp; audit trail</h3>
+        <p>Recycle bin, session logs, and change history. Nothing disappears, and you always know who changed what.</p>
+      </div>
+    </div>
+    <div class="dark-cta">
+      <a href="#demo" class="btn btn-orange">Get A Demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- Independent question / Why Bridge OS -->
+<section class="section" id="difference">
+  <div class="container">
+    <div class="center">
+      <span class="eyebrow">The Independent Question</span>
+      <h2 class="h2" style="margin-top:16px;">Ask yourself one thing.</h2>
+      <p class="lead" style="margin-top:16px; max-width:760px; margin-left:auto; margin-right:auto;">Could you export your entire inventory and sold-price history out of your current system tomorrow — and post it anywhere you want, including sites that compete with the marketplace you use now?</p>
+    </div>
+    <div class="ind-grid">
+      <div class="ind-col old reveal">
+        <div class="ind-head">
+          <span class="brand-chip"><i></i>ALL ED GARDEN</span>
+          <h3>The old way</h3>
+          <p>Locked into someone else's platform</p>
+        </div>
+        <ul>
+          <li>Your listings live in their cloud, on their terms.</li>
+          <li>Your sold prices feed the pricing reports they sell back to you.</li>
+          <li>You reach only their marketplace's buyer traffic.</li>
+          <li>Their app talks to their marketplace. That's the whole loop.</li>
+          <li>Leave the platform and you start over from an empty shell.</li>
+        </ul>
+      </div>
+      <div class="ind-col bridge reveal">
+        <div class="ind-head">
+          <span class="brand-chip" style="color:var(--orange);"><i style="background:var(--orange);"></i>BRIDGE OS</span>
+          <h3>Independent by design</h3>
+          <p>Your data. Your store. Your channels.</p>
+        </div>
+        <ul>
+          <li>Your listings live in your database, on your server.</li>
+          <li>Your sold prices stay on your books. Nowhere else.</li>
+          <li>You reach every channel your buyers actually use — theirs included.</li>
+          <li>Bridge talks to every channel that will take a listing feed.</li>
+          <li>Leave Bridge and you take every unit, photo, and sold price with you.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section" id="customers">
+  <div class="container">
+    <div class="center">
+      <span class="eyebrow">Customer Success</span>
+      <h2 class="h2" style="margin-top:16px;">Take it from the dealers on the platform.</h2>
+    </div>
+    <div class="quote-grid">
+      <div class="quote reveal">
+        <div class="stars">★★★★★</div>
+        <blockquote>"We used to re-enter every unit three times — our site, Facebook, and a spreadsheet. Bridge OS posts it everywhere at once. Our online inventory is finally accurate."</blockquote>
+        <footer>Dealer Partner<span>Agriculture Equipment Dealer</span></footer>
+      </div>
+      <div class="quote reveal">
+        <div class="stars">★★★★★</div>
+        <blockquote>"The mobile companion is the part my sales guys love. They pull up a unit's full spec sheet right on a customer's property. It closes deals we used to lose to a drive back to the office."</blockquote>
+        <footer>Dealer Partner<span>Trailer &amp; Tractor Dealership</span></footer>
+      </div>
+      <div class="quote reveal">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Hitting publish and watching the showroom update instantly changed everything. What used to take my admin two weeks of website emails now happens the second we save a unit."</blockquote>
+        <footer>Dealer Partner<span>Compact &amp; Utility Equipment Dealer</span></footer>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA band -->
+<section class="cta-band">
+  <div class="container cta-inner">
+    <div>
+      <h2>Ready to get your inventory working harder?</h2>
+      <p>See what Bridge OS can do for your dealership. We'll show you the platform in 30 minutes — no pitch, no pressure.</p>
+    </div>
+    <a href="#demo" class="btn btn-white">Book My Demo →</a>
+  </div>
+</section>
+
+<!-- Demo form -->
+<section class="section demo" id="demo">
+  <div class="container">
+    <div class="center">
+      <span class="eyebrow">Get Started</span>
+      <h2 class="h2" style="margin-top:16px;">See what Bridge OS can do for your dealership.</h2>
+      <p class="lead" style="margin-top:16px; max-width:620px; margin-left:auto; margin-right:auto;">Tell us about your dealership. We'll show you the platform in 30 minutes — no pitch, no pressure.</p>
+    </div>
+    <div class="demo-grid">
+      <div class="reveal">
+        <span class="eyebrow">What you get</span>
+        <ul class="demo-list">
+          <li><span class="ico">▦</span><div><small>Inventory</small>Live ledger, categories, search &amp; filters</div></li>
+          <li><span class="ico">◎</span><div><small>Website</small>Searchable showroom that updates itself</div></li>
+          <li><span class="ico">⇄</span><div><small>Marketplace</small>One-click syndication to every channel</div></li>
+          <li><span class="ico">☎</span><div><small>Mobile</small>Companion app for selling from the field</div></li>
+          <li><span class="ico">⚙</span><div><small>Insights</small>Analytics, history &amp; full audit trail</div></li>
+        </ul>
+        <p style="margin-top:24px; font-size:14px; color:var(--gray-400);">No commitment. Just an honest conversation with people who build dealership sites for a living.</p>
+      </div>
+      <div class="form-card reveal">
+        <h3 class="h3">Request your demo.</h3>
+        <form class="form-grid" onsubmit="event.preventDefault(); alert('Demo form — wire to WP on the live site.');">
+          <div class="field">
+            <label for="f-name">First Name *</label>
+            <input id="f-name" type="text" placeholder="John" required />
+          </div>
+          <div class="field">
+            <label for="f-last">Last Name *</label>
+            <input id="f-last" type="text" placeholder="Dealer" required />
+          </div>
+          <div class="field">
+            <label for="f-email">Email Address *</label>
+            <input id="f-email" type="email" placeholder="you@dealership.com" required />
+          </div>
+          <div class="field">
+            <label for="f-phone">Phone Number</label>
+            <input id="f-phone" type="tel" placeholder="(559) 000-0000" />
+          </div>
+          <div class="field">
+            <label for="f-co">Dealership Name *</label>
+            <input id="f-co" type="text" placeholder="Bryce Equipment" required />
+          </div>
+          <div class="field">
+            <label for="f-industry">Industry</label>
+            <select id="f-industry">
+              <option>Select an industry</option>
+              <option>Powersports</option>
+              <option>Marine</option>
+              <option>Trailer</option>
+              <option>Agriculture</option>
+              <option>Truck</option>
+              <option>Heavy Equipment</option>
+              <option>Outdoor Power Equipment</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label for="f-msg">What are you trying to solve?</label>
+            <textarea id="f-msg" placeholder="E.g. keeping online inventory accurate, syndicating to marketplaces, replacing spreadsheets..."></textarea>
+          </div>
+          <label class="checkline">
+            <input type="checkbox" required /> I agree to be contacted about Bridge OS. Message &amp; data rates may apply. Text STOP to opt out anytime.
+          </label>
+          <button type="submit" class="btn btn-orange">Book My Demo</button>
+        </form>
+        <p class="form-note">No commitment. Just an honest conversation with someone who knows your industry.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo">
+          <div class="logo-mark" style="background:var(--orange); color:#fff;">⛭</div>
+          <div class="logo-word" style="color:#fff;">BRIDGE<small style="color:#9a9a9f;">OS · hwy559bridge.com</small></div>
+        </div>
+        <p>The dealership operating system — inventory, website, marketplace sync, mobile, and analytics in one connected platform.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#platform">Inventory Management</a></li>
+          <li><a href="#platform">Public Showroom</a></li>
+          <li><a href="#platform">Marketplace Sync</a></li>
+          <li><a href="#platform">Mobile Companion App</a></li>
+          <li><a href="#platform">Videos &amp; Media</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Industries</h4>
+        <ul>
+          <li><a href="#industries">Agriculture</a></li>
+          <li><a href="#industries">Heavy Equipment</a></li>
+          <li><a href="#industries">Trailer</a></li>
+          <li><a href="#industries">Powersports</a></li>
+          <li><a href="#industries">Marine</a></li>
+          <li><a href="#industries">Outdoor Power Equipment</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Get In Touch</h4>
+        <ul>
+          <li><a href="tel:+15595590100">(559) 555-0100</a></li>
+          <li><a href="mailto:hello@hwy559bridge.com">hello@hwy559bridge.com</a></li>
+          <li><a href="#demo">Book A Demo</a></li>
+          <li><a href="#demo">Talk To Sales</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 Bridge OS · hwy559bridge.com. All rights reserved.</div>
+      <div class="legal">
+        <a href="#">Privacy Policy</a><a href="#">Terms</a><a href="#">Accessibility</a>
+      </div>
+      <div class="madeby">Built by <a href="https://www.hwy559.com" target="_blank" rel="noopener">hwy559.com</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Reveal-on-scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Mobile menu toggle (minimal)
+  document.querySelector('.burger').addEventListener('click', () => {
+    const links = document.querySelector('.nav-links');
+    const show = links.style.display === 'flex';
+    links.style.display = show ? 'none' : 'flex';
+    if (!show) {
+      links.style.flexDirection = 'column';
+      links.style.position = 'absolute';
+      links.style.top = '76px';
+      links.style.left = '0';
+      links.style.right = '0';
+      links.style.background = '#fff';
+      links.style.padding = '20px 24px';
+      links.style.boxShadow = 'var(--shadow-lg)';
+      links.style.gap = '16px';
+    }
+  });
+</script>
+</body>
+</html>
