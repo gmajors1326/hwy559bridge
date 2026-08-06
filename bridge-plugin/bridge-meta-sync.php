@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Bridge OS — Meta Catalog Sync Logging
  *
@@ -8,6 +8,15 @@
  */
 
 defined('ABSPATH') || exit;
+
+if (!function_exists('bridge_get_meta_field')) {
+    function bridge_get_meta_field($key, $post_id) {
+        if (function_exists('get_field')) {
+            return get_field($key, $post_id);
+        }
+        return get_post_meta($post_id, $key, true);
+    }
+}
 
 // â”€â”€â”€ Meta Catalog Sync Logging â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -44,17 +53,17 @@ function bridge_acf_save_meta_sync_log($post_id): void {
     }
 
     $title = get_the_title($post_id);
-    $make = get_field('make', $post_id) ?: '';
-    $model = get_field('model', $post_id) ?: '';
+    $make = bridge_get_meta_field('make', $post_id) ?: '';
+    $model = bridge_get_meta_field('model', $post_id) ?: '';
     $display_name = trim("$make $model");
     if (empty($display_name)) {
         $display_name = $title;
     }
 
-    $price = get_field('price', $post_id);
-    $gallery = get_field('gallery', $post_id);
+    $price = bridge_get_meta_field('price', $post_id);
+    $gallery = bridge_get_meta_field('gallery', $post_id);
     
-    $facebook_sync = get_field('facebook_sync', $post_id);
+    $facebook_sync = bridge_get_meta_field('facebook_sync', $post_id);
     $facebook_sync = ($facebook_sync !== null && $facebook_sync !== '') ? (bool)$facebook_sync : false;
 
     $prev_key = 'bridge_prev_post_' . $post_id;
@@ -102,8 +111,8 @@ function bridge_trash_meta_sync_log($post_id): void {
         return;
     }
     $title = get_the_title($post_id);
-    $make = get_field('make', $post_id) ?: '';
-    $model = get_field('model', $post_id) ?: '';
+    $make = bridge_get_meta_field('make', $post_id) ?: '';
+    $model = bridge_get_meta_field('model', $post_id) ?: '';
     $display_name = trim("$make $model");
     if (empty($display_name)) {
         $display_name = $title;
@@ -121,8 +130,8 @@ function bridge_untrash_meta_sync_log($post_id): void {
         return;
     }
     $title = get_the_title($post_id);
-    $make = get_field('make', $post_id) ?: '';
-    $model = get_field('model', $post_id) ?: '';
+    $make = bridge_get_meta_field('make', $post_id) ?: '';
+    $model = bridge_get_meta_field('model', $post_id) ?: '';
     $display_name = trim("$make $model");
     if (empty($display_name)) {
         $display_name = $title;
@@ -140,8 +149,8 @@ function bridge_delete_meta_sync_log($post_id): void {
         return;
     }
     $title = get_the_title($post_id);
-    $make = get_field('make', $post_id) ?: '';
-    $model = get_field('model', $post_id) ?: '';
+    $make = bridge_get_meta_field('make', $post_id) ?: '';
+    $model = bridge_get_meta_field('model', $post_id) ?: '';
     $display_name = trim("$make $model");
     if (empty($display_name)) {
         $display_name = $title;
