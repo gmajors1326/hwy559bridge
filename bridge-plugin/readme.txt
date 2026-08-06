@@ -3,7 +3,7 @@ Contributors: HWY 559 Team
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Version: 1.0.8
+Version: 1.0.9
 License: Proprietary
 
 == Description ==
