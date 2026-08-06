@@ -46,7 +46,7 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "[*] Extracting and activating HWY 559 Bridge Theme on Hostinger..." -ForegroundColor Green
 $sshTarget = "$HostingerUser@$HostingerHost"
 $fullWpPath = "/home/$HostingerUser/$WpPath"
-$sshCmd = "cd $fullWpPath/wp-content/themes/ && rm -rf hwy559bridge-theme theme varner-lite && unzip -q hwy559bridge-theme.zip && rm hwy559bridge-theme.zip && wp theme activate hwy559bridge-theme --path=$fullWpPath"
+$sshCmd = "cd $fullWpPath/wp-content/themes/ && rm -rf hwy559bridge-theme theme && unzip -q hwy559bridge-theme.zip && rm hwy559bridge-theme.zip && wp theme activate hwy559bridge-theme --path=$fullWpPath"
 
 ssh -p $HostingerPort $sshTarget $sshCmd
 

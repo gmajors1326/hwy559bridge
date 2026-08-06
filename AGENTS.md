@@ -2,7 +2,10 @@
 
 ## What this is
 React-powered inventory management plugin for equipment dealers.
-Brand: Bryce Equipment (hwy559.com / varnrehequipment.com per SEO config).
+Brand: HWY 559 Bridge (hwy559bridge.com / hwy559.com).
+
+## STRICT BRANDING RULE
+NEVER reference or use "Varner" or "Varner Equipment" in this project codebase, scripts, documentation, or themes. All branding, namespaces, and references MUST be HWY 559 Bridge / Bridge OS.
 Current version on `main`: **1.0.4** (build gracefully bumps this).
 
 ## Build / Run

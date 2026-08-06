@@ -1,31 +1,31 @@
-=== Varner OS Plugin v23 ===
-Contributors: Varner Team
+=== Bridge OS Plugin ===
+Contributors: HWY 559 Team
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Version: 1.0.7
+Version: 1.0.8
 License: Proprietary
 
 == Description ==
-React-powered inventory management for Varner Equipment. Provides custom Equipment CPT, ACF fields, admin dashboard (Varner OS), REST API endpoints, and asset loading for the PWA.
+React-powered inventory management for equipment dealers. Provides custom Equipment CPT, ACF fields, admin dashboard (Bridge OS), REST API endpoints, and asset loading for the PWA.
 
 == Key Features ==
 - Equipment custom post type with ACF fields and gallery/implements.
 - React admin app mount in wp-admin and Gutenberg block.
-- Public showroom shortcode `[varner_showroom]`.
-- REST API namespace `varner/v1` for inventory CRUD, media upload, brands, categories, auth helpers, and per-unit ledger.
+- Public showroom shortcode `[bridge_showroom]`.
+- REST API namespace `bridge/v1` for inventory CRUD, media upload, brands, categories, auth helpers, and per-unit ledger.
 - Session and ledger tables provisioned on activation (audit trail foundation, with field-diff logging wired).
 
 == Installation ==
 1. Upload plugin files or install the zip via wp-admin.
-2. Activate the plugin. Activation runs dbDelta to create `wp_varner_user_sessions` and `wp_varner_inventory_ledger`.
+2. Activate the plugin. Activation runs dbDelta to create `wp_bridge_user_sessions` and `wp_bridge_inventory_ledger`.
 3. Ensure ACF Pro is active (fields are auto-registered; optional `acf-json/` for sync).
 4. Place built assets under `dist/assets/` (already bundled here).
 
 == Shortcodes ==
-- `[varner_showroom]` renders the public React showroom container.
+- `[bridge_showroom]` renders the public React showroom container.
 
-== REST Endpoints (namespace varner/v1) ==
+== REST Endpoints (namespace bridge/v1) ==
 - `GET /inventory` — list equipment (public, filtered for visibility if not editor).
 - `POST /inventory` — create equipment (auth: edit_posts).
 - `PATCH /inventory/{id}` — update equipment (auth).
@@ -45,9 +45,9 @@ React-powered inventory management for Varner Equipment. Provides custom Equipme
 - GET /page-templates — list page templates (auth: edit_pages).
 
 == Admin Mounts ==
-- Varner OS dashboard under wp-admin menu.
-- Gutenberg block `varner-editor` mounts the React app.
-- Equipment CPT hidden from main menu (managed via Varner OS).
+- Bridge OS dashboard under wp-admin menu.
+- Gutenberg block `bridge-editor` mounts the React app.
+- Equipment CPT hidden from main menu (managed via Bridge OS).
 
 == Asset Loading ==
 - Picks latest `dist/assets/*.js|*.css`, preferring `main.*`, versioned by `filemtime`.
@@ -60,16 +60,6 @@ React-powered inventory management for Varner Equipment. Provides custom Equipme
 
 == Changelog ==
 
-= 1.23.261 =
-- Fix: PWA at /mobile-app/ failed to load inventory (and all authenticated data)
-  because the React API client suppressed the `X-WP-Nonce` header whenever
-  `varnerData.is_mobile_app` was true, relying solely on the mobile-token cookie.
-  When that token path did not authenticate the request, WordPress rejected every
-  authenticated endpoint (/me, /inventory, /brands, /categories, ...) with
-  401 rest_forbidden and the app hung on "LOADING INVENTORY…". The client now
-  always sends the WP REST nonce when one is available; cookie+nonce auth carries
-  the browser/same-jar case while the mobile-token cookie remains a fallback.
-- No database or schema changes (DB version unchanged at 1.23.8).
-
-= 1.23.260 =
-- Prior release.
+= 1.0.7 =
+- Cleaned branding and upgraded deployment automation for Hostinger SSH integration.
+- Full parity across mock API and live WordPress REST API endpoints.
