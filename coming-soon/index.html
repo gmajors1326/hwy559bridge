@@ -69,23 +69,21 @@
             One connected platform for website, inventory, marketing, and analytics — built on 15 years of equipment dealer data. We are finalizing our launch along Highway 559.
         </p>
 
-        <!-- Early Access Form -->
-        <form class="flex flex-col sm:flex-row items-stretch gap-3 w-full max-w-md mb-8" onsubmit="event.preventDefault(); document.getElementById('submittedMsg').classList.remove('hidden'); this.reset();">
-            <input type="email" placeholder="Enter your dealership email..." required class="flex-1 bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-white placeholder-white/40 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/30 font-medium transition-all">
+        <!-- Early Access Form (Submits to gmajors1326@gmail.com) -->
+        <form action="https://formsubmit.co/gmajors1326@gmail.com" method="POST" class="flex flex-col sm:flex-row items-stretch gap-3 w-full max-w-md mb-8">
+            <input type="hidden" name="_subject" value="New HWY 559 Bridge Early Access Notification Request">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="email" name="email" placeholder="Enter your dealership email..." required class="flex-1 bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-white placeholder-white/40 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/30 font-medium transition-all">
             <button type="submit" class="bg-brand-orange text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-white hover:text-brand-black hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap">
                 Notify Me <i class="fas fa-arrow-right ml-2 text-xs"></i>
             </button>
         </form>
-
-        <div id="submittedMsg" class="hidden text-sm font-bold text-emerald-400 mb-8"><i class="fas fa-check-circle mr-1"></i> Thank you! You're on the priority early access list.</div>
     </main>
 
     <!-- Footer -->
-    <footer class="w-full max-w-[1360px] mx-auto px-6 lg:px-12 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 text-xs text-white/40 font-medium z-20">
+    <footer class="w-full max-w-[1360px] mx-auto px-6 lg:px-12 py-8 flex items-center justify-center border-t border-white/10 text-xs text-white/40 font-medium z-20">
         <div>© 2026 HWY 559 Bridge. All Rights Reserved.</div>
-        <div class="flex items-center gap-6">
-            <a href="mailto:hello@hwy559bridge.com" class="text-white/60 hover:text-brand-orange transition-colors">hello@hwy559bridge.com</a>
-        </div>
     </footer>
 </body>
 </html>
