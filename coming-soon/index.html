@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HWY 559 Bridge | Coming Home Soon</title>
+    <title>HWY 559 Bridge | Coming Soon</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -33,56 +33,22 @@
                     },
                     animation: {
                         'fade-up': 'fadeUp 0.8s ease both',
-                        'draw-line': 'drawLine 1.4s ease forwards',
-                        'float': 'float 4s ease-in-out infinite',
-                        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
                     },
                     keyframes: {
                         fadeUp: {
                             '0%': { opacity: '0', transform: 'translateY(24px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        drawLine: {
-                            'to': { strokeDashoffset: '0' }
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-6px)' },
-                        },
-                        pulseGlow: {
-                            '0%, 100%': { opacity: '0.8', filter: 'drop-shadow(0 0 15px rgba(239, 133, 34, 0.4))' },
-                            '50%': { opacity: '0.4', filter: 'drop-shadow(0 0 5px rgba(239, 133, 34, 0.1))' },
                         }
                     }
                 }
             }
         }
     </script>
-
-    <style>
-        html { scroll-behavior: smooth; }
-        .svg-line-1 { stroke-dasharray: 505; stroke-dashoffset: 505; animation-delay: 0.10s; }
-        .svg-line-2 { stroke-dasharray: 397; stroke-dashoffset: 397; animation-delay: 0.22s; }
-        .svg-line-3 { stroke-dasharray: 330; stroke-dashoffset: 330; animation-delay: 0.34s; }
-        .svg-line-4 { stroke-dasharray: 330; stroke-dashoffset: 330; animation-delay: 0.34s; }
-        .svg-line-5 { stroke-dasharray: 397; stroke-dashoffset: 397; animation-delay: 0.22s; }
-        .svg-line-6 { stroke-dasharray: 505; stroke-dashoffset: 505; animation-delay: 0.10s; }
-
-        .channel-node {
-            cursor: pointer;
-            transition: transform 0.3s ease, filter 0.3s ease;
-        }
-        .channel-node:hover {
-            transform: scale(1.1);
-            filter: drop-shadow(0 0 14px rgba(239, 133, 34, 0.9));
-        }
-    </style>
 </head>
 <body class="font-sans antialiased text-white bg-brand-black min-h-screen flex flex-col justify-between selection:bg-brand-orange selection:text-white relative overflow-x-hidden">
 
     <!-- Ambient Glow Background Motif -->
-    <div class="absolute -top-40 -left-40 w-[600px] h-[600px] bg-brand-orange/15 rounded-full blur-[140px] pointer-events-none"></div>
-    <div class="absolute -bottom-40 -right-40 w-[600px] h-[600px] bg-brand-orange/10 rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-brand-orange/15 rounded-full blur-[160px] pointer-events-none"></div>
 
     <!-- Header / Brand Bar -->
     <header class="w-full max-w-[1360px] mx-auto px-6 lg:px-12 py-8 flex items-center justify-between z-20">
@@ -90,137 +56,42 @@
             <img src="../bridge-plugin/assets/logos/hwy559bridge_logo_final.png" alt="HWY 559 Bridge" class="h-10 w-auto brightness-0 invert" onerror="this.onerror=null; this.src='https://placehold.co/400x100/000000/EF8522?text=HWY+559+BRIDGE&font=oswald'">
         </a>
         <div class="flex items-center gap-4">
-            <a href="https://dev.hwy559bridge.com" target="_blank" rel="noopener" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-orange bg-brand-orange/10 border border-brand-orange/30 px-4 py-2 rounded-full hover:bg-brand-orange hover:text-white transition-all duration-300">
+            <a href="https://dev.hwy559bridge.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-orange bg-brand-orange/10 border border-brand-orange/30 px-4 py-2 rounded-full hover:bg-brand-orange hover:text-white transition-all duration-300">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
                 Staging Preview Live
             </a>
         </div>
     </header>
 
-    <!-- Main Coming Soon Content -->
-    <main class="max-w-[1360px] mx-auto px-6 lg:px-12 py-12 flex flex-col lg:flex-row items-center justify-between gap-16 z-10 my-auto">
+    <!-- Main Coming Soon Content (Centered) -->
+    <main class="max-w-[840px] mx-auto px-6 py-16 flex flex-col items-center text-center z-10 my-auto animate-fade-up">
         
-        <!-- Left Column: Coming Home Soon Headline & Form -->
-        <div class="flex-1 max-w-2xl animate-fade-up">
-            <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 text-brand-orange text-xs font-bold tracking-[2px] uppercase py-2 px-4 rounded-full mb-8">
-                <i class="fas fa-hammer text-brand-orange"></i> Dealership OS Platform
-            </div>
-            
-            <h1 class="text-5xl lg:text-[72px] leading-[1.02] font-black tracking-tight mb-8">
-                Coming Home <br>
-                <span class="text-brand-orange">Soon.</span>
-            </h1>
-            
-            <p class="text-lg lg:text-xl leading-relaxed text-white/70 mb-10 font-medium max-w-xl">
-                One connected platform for website, inventory, marketing, and analytics — built on 15 years of equipment dealer data. We are finalizing our launch along Highway 559.
-            </p>
-
-            <!-- Early Access Form -->
-            <form class="flex flex-col sm:flex-row items-stretch gap-3 max-w-lg mb-8" onsubmit="event.preventDefault(); document.getElementById('submittedMsg').classList.remove('hidden'); this.reset();">
-                <input type="email" placeholder="Enter your dealership email..." required class="flex-1 bg-white/10 border border-white/20 rounded-lg px-5 py-4 text-white placeholder-white/40 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/30 font-medium transition-all">
-                <button type="submit" class="bg-brand-orange text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:bg-white hover:text-brand-black hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap">
-                    Notify Me <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                </button>
-            </form>
-
-            <div id="submittedMsg" class="hidden text-sm font-bold text-emerald-400 mb-6"><i class="fas fa-check-circle mr-1"></i> Thank you! You're on the priority early access list.</div>
-
-            <!-- Trust Highlights -->
-            <div class="grid grid-cols-3 gap-6 pt-8 border-t border-white/10 text-left">
-                <div>
-                    <div class="text-2xl lg:text-3xl font-black text-brand-orange mb-1">1,200+</div>
-                    <div class="text-xs font-bold tracking-wider text-white/40 uppercase">Dealers Served</div>
-                </div>
-                <div>
-                    <div class="text-2xl lg:text-3xl font-black text-brand-orange mb-1">4.8M</div>
-                    <div class="text-xs font-bold tracking-wider text-white/40 uppercase">Buyers Connected</div>
-                </div>
-                <div>
-                    <div class="text-2xl lg:text-3xl font-black text-brand-orange mb-1">100%</div>
-                    <div class="text-xs font-bold tracking-wider text-white/40 uppercase">Data Ownership</div>
-                </div>
-            </div>
+        <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 text-brand-orange text-xs font-bold tracking-[2px] uppercase py-2 px-5 rounded-full mb-8">
+            <i class="fas fa-layer-group text-brand-orange"></i> Dealership OS Platform
         </div>
+        
+        <h1 class="text-6xl sm:text-7xl lg:text-[84px] leading-tight font-black tracking-tight mb-8">
+            Coming <span class="text-brand-orange">Soon.</span>
+        </h1>
+        
+        <p class="text-lg sm:text-xl lg:text-2xl leading-relaxed text-white/70 mb-12 font-medium max-w-2xl">
+            One connected platform for website, inventory, marketing, and analytics — built on 15 years of equipment dealer data. We are finalizing our launch along Highway 559.
+        </p>
 
-        <!-- Right Column: Structural Cable Visualizer -->
-        <div class="flex-1 w-full lg:max-w-[580px] relative animate-fade-up delay-200">
-            <div class="bg-brand-darkCard/80 border border-white/10 rounded-3xl p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden">
-                
-                <div class="flex items-center justify-between mb-4">
-                    <span class="text-xs font-bold text-white/40 uppercase tracking-widest">Single Entry Point</span>
-                    <span class="text-xs font-bold text-brand-orange bg-brand-orange/10 px-3 py-1 rounded-full border border-brand-orange/20">6 Channel Sync</span>
-                </div>
+        <!-- Early Access Form -->
+        <form class="flex flex-col sm:flex-row items-stretch gap-3 w-full max-w-md mb-8" onsubmit="event.preventDefault(); document.getElementById('submittedMsg').classList.remove('hidden'); this.reset();">
+            <input type="email" placeholder="Enter your dealership email..." required class="flex-1 bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-white placeholder-white/40 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/30 font-medium transition-all">
+            <button type="submit" class="bg-brand-orange text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-white hover:text-brand-black hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap">
+                Notify Me <i class="fas fa-arrow-right ml-2 text-xs"></i>
+            </button>
+        </form>
 
-                <!-- Cable Fan-Out Graphic -->
-                <svg viewBox="0 0 900 390" class="w-full h-auto drop-shadow-2xl">
-                    <line x1="60" y1="340" x2="840" y2="340" stroke="#FFFFFF" stroke-width="2" opacity="0.10"></line>
-                    
-                    <line x1="450" y1="30" x2="60" y2="340" stroke="#EF8522" stroke-width="2.5" stroke-linecap="round" class="animate-draw-line svg-line-1"></line>
-                    <line x1="450" y1="30" x2="216" y2="340" stroke="#EF8522" stroke-width="2.5" stroke-linecap="round" class="animate-draw-line svg-line-2"></line>
-                    <line x1="450" y1="30" x2="372" y2="340" stroke="#EF8522" stroke-width="2.5" stroke-linecap="round" class="animate-draw-line svg-line-3"></line>
-                    <line x1="450" y1="30" x2="528" y2="340" stroke="#EF8522" stroke-width="2.5" stroke-linecap="round" class="animate-draw-line svg-line-4"></line>
-                    <line x1="450" y1="30" x2="684" y2="340" stroke="#EF8522" stroke-width="2.5" stroke-linecap="round" class="animate-draw-line svg-line-5"></line>
-                    <line x1="450" y1="30" x2="840" y2="340" stroke="#EF8522" stroke-width="2.5" stroke-linecap="round" class="animate-draw-line svg-line-6"></line>
-                    
-                    <circle cx="450" cy="30" r="10" fill="#EF8522" stroke="#FFFFFF" stroke-width="3"></circle>
-                    <text x="450" y="5" text-anchor="middle" fill="#FFFFFF" font-size="12" font-weight="900" letter-spacing="1">HWY 559 BRIDGE CORE LEDGER</text>
-                    
-                    <!-- Nodes -->
-                    <g class="channel-node animate-float" style="animation-delay: 0s;">
-                        <circle cx="60" cy="340" r="24" fill="#121418" stroke="#EF8522" stroke-width="3"></circle>
-                        <foreignObject x="45" y="325" width="30" height="30">
-                            <div class="flex items-center justify-center h-full text-brand-orange text-lg"><i class="fas fa-desktop"></i></div>
-                        </foreignObject>
-                        <text x="60" y="378" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Website</text>
-                    </g>
+        <div id="submittedMsg" class="hidden text-sm font-bold text-emerald-400 mb-8"><i class="fas fa-check-circle mr-1"></i> Thank you! You're on the priority early access list.</div>
 
-                    <g class="channel-node animate-float" style="animation-delay: 0.5s;">
-                        <circle cx="216" cy="340" r="24" fill="#121418" stroke="#EF8522" stroke-width="3"></circle>
-                        <foreignObject x="201" y="325" width="30" height="30">
-                            <div class="flex items-center justify-center h-full text-brand-orange text-lg"><i class="fas fa-search"></i></div>
-                        </foreignObject>
-                        <text x="216" y="378" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Search</text>
-                    </g>
-
-                    <g class="channel-node animate-float" style="animation-delay: 1s;">
-                        <circle cx="372" cy="340" r="24" fill="#121418" stroke="#EF8522" stroke-width="3"></circle>
-                        <foreignObject x="357" y="325" width="30" height="30">
-                            <div class="flex items-center justify-center h-full text-brand-orange text-lg"><i class="fas fa-bullhorn"></i></div>
-                        </foreignObject>
-                        <text x="372" y="378" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Paid Ads</text>
-                    </g>
-
-                    <g class="channel-node animate-float" style="animation-delay: 1.5s;">
-                        <circle cx="528" cy="340" r="24" fill="#121418" stroke="#EF8522" stroke-width="3"></circle>
-                        <foreignObject x="513" y="325" width="30" height="30">
-                            <div class="flex items-center justify-center h-full text-brand-orange text-lg"><i class="fas fa-share-alt"></i></div>
-                        </foreignObject>
-                        <text x="528" y="378" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Social</text>
-                    </g>
-
-                    <g class="channel-node animate-float" style="animation-delay: 2s;">
-                        <circle cx="684" cy="340" r="24" fill="#121418" stroke="#EF8522" stroke-width="3"></circle>
-                        <foreignObject x="669" y="325" width="30" height="30">
-                            <div class="flex items-center justify-center h-full text-brand-orange text-lg"><i class="fas fa-envelope"></i></div>
-                        </foreignObject>
-                        <text x="684" y="378" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Email</text>
-                    </g>
-
-                    <g class="channel-node animate-float" style="animation-delay: 2.5s;">
-                        <circle cx="840" cy="340" r="24" fill="#121418" stroke="#EF8522" stroke-width="3"></circle>
-                        <foreignObject x="825" y="325" width="30" height="30">
-                            <div class="flex items-center justify-center h-full text-brand-orange text-lg"><i class="fas fa-cog"></i></div>
-                        </foreignObject>
-                        <text x="840" y="378" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Syndication</text>
-                    </g>
-                </svg>
-
-                <div class="mt-6 pt-6 border-t border-white/10 flex items-center justify-between text-xs text-white/50 font-medium">
-                    <span><i class="fas fa-shield-alt text-brand-orange mr-1"></i> Independent by Design</span>
-                    <a href="https://dev.hwy559bridge.com" target="_blank" class="text-brand-orange hover:underline font-bold">Visit Staging Platform →</a>
-                </div>
-            </div>
-        </div>
+        <!-- Quick Staging Action Link -->
+        <a href="https://dev.hwy559bridge.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm font-bold text-white/60 hover:text-brand-orange transition-colors">
+            <i class="fas fa-external-link-alt text-brand-orange text-xs"></i> Explore Staging Environment (dev.hwy559bridge.com)
+        </a>
     </main>
 
     <!-- Footer -->
